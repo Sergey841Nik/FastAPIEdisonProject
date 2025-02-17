@@ -1,0 +1,12 @@
+services:
+  
+  pgdb:
+    image: postgres:17.3-alpine3.21
+    ports:
+      - 5230:5230
+    environment:
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_USER=admin
+      - POSTGRES_DB=patres
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data
