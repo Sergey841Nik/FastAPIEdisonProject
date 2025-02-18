@@ -7,6 +7,6 @@ services:
     environment:
       - POSTGRES_PASSWORD=password
       - POSTGRES_USER=admin
-      - POSTGRES_DB=patres
+      - POSTGRES_DB=db_myproject
     volumes:
       - ./pgdata:/var/lib/postgresql/data
