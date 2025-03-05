@@ -3,8 +3,15 @@ from logging import getLogger, basicConfig, INFO, StreamHandler
 import uvicorn
 
 from fastapi import FastAPI
+from fastapi.exceptions import RequestValidationError, HTTPException
+
+from sqlalchemy.exc import SQLAlchemyError
 
 from src.auth.views import router as auth_router
+from src.exceptions import (
+    custom_http_exception_handler,
+    custom_request_validation_exception_handler,
+)
 
 app = FastAPI()
 
@@ -18,6 +25,8 @@ basicConfig(level=INFO, format=FORMAT, handlers=[stream_handler])
 
 app.include_router(auth_router)
 
+app.add_exception_handler(HTTPException, custom_http_exception_handler)
+app.add_exception_handler(RequestValidationError, custom_request_validation_exception_handler)
 
 @app.get("/")
 def home_page():
