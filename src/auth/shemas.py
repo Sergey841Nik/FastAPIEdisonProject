@@ -1,6 +1,6 @@
-
 from typing import Self
-from pydantic import BaseModel, ConfigDict, EmailStr, Field, model_validator
+from fastapi.exceptions import RequestValidationError
+from pydantic import BaseModel, ConfigDict, EmailStr, Field,  model_validator
 
 from src.auth.utils import hash_password
 
@@ -30,18 +30,22 @@ class UserRegister(UserBase):
     @model_validator(mode="after")
     def check_password(self) -> Self:
         if self.password != self.confirm_password:
-            raise ValueError("Пароли не совпадают")
-        self.password = hash_password(
-            self.password
-        )  # хешируем пароль до сохранения в базе данных
+            raise RequestValidationError("Пароли не совпадают")
+        self.password = hash_password(self.password)  # хешируем пароль до сохранения в базе данных
         return self
 
 
 class UserAddDB(UserBase):
-    password: str = Field(description="Пароль в формате HASH-строки")
-
+    password: bytes = Field(description="Пароль в формате HASH-строки")
+    roles_id: int = Field(default=1)
 
 class UserAuth(EmailModel):
     password: str = Field(
         min_length=5, max_length=50, description="Пароль, от 5 до 50 знаков"
     )
+
+class UserInfo(UserBase):
+    id: int = Field(description="Идентификатор пользователя")
+
+class UserInfoForAdmin(UserInfo):
+    roles_name: str = Field(description="Название роли пользователя")

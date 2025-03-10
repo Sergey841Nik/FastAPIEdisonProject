@@ -1,7 +1,7 @@
 from typing import AsyncGenerator
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
 
-from core.config import settings
+from src.core.config import settings
 
 
 class DBHelper:
@@ -10,7 +10,7 @@ class DBHelper:
             url=url,
             echo=echo,
         )
-        self.session_factory = async_sessionmaker(  
+        self.session_factory = async_sessionmaker(
             bind=self.engine,
             autoflush=False,
             autocommit=False,
@@ -39,6 +39,7 @@ class DBHelper:
                 raise
             finally:
                 await session.close()
+
 
 db_helper = DBHelper(
     url=settings.url,
