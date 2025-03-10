@@ -5,8 +5,6 @@ import uvicorn
 from fastapi import FastAPI
 from fastapi.exceptions import RequestValidationError, HTTPException
 
-from sqlalchemy.exc import SQLAlchemyError
-
 from src.auth.views import router as auth_router
 from src.exceptions import (
     custom_http_exception_handler,
@@ -29,7 +27,7 @@ app.add_exception_handler(HTTPException, custom_http_exception_handler)
 app.add_exception_handler(RequestValidationError, custom_request_validation_exception_handler)
 
 @app.get("/")
-def home_page():
+def home_page() -> dict:
     return {"message": "Это стартовое сообщение"}
 
 
@@ -37,5 +35,6 @@ if __name__ == "__main__":
     uvicorn.run(
         "main:app",
         reload=True,
+        port=8000,
     )
 

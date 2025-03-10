@@ -32,9 +32,9 @@ def encode_jwt(
 
 def decode_jwt(
     token: str | bytes,
-    public_key: str = settings.public_key_path.read_text,
+    public_key: str = settings.public_key_path.read_text(),
     algorithm: str = settings.algorithms,
-):
+) -> dict:
     return jwt.decode(token, public_key, algorithms=[algorithm])
 
 
@@ -44,7 +44,5 @@ def hash_password(password: str) -> bytes:
     return bcrypt.hashpw(password_bytes, salt)
 
 
-def validate_password(password: str, hashed_password: str) -> bool:
-    return bcrypt.checkpw(password.encode(), hashed_password.encode())
-
-print(encode_jwt({"sub": "test"}, "access"))
+def validate_password(password: str, hashed_password: bytes) -> bool:
+    return bcrypt.checkpw(password.encode(), hashed_password)
