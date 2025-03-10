@@ -10,6 +10,6 @@ services:
       - POSTGRES_PASSWORD=${DB_PASS}
       - POSTGRES_USER=${DB_USER}
     volumes:
-      - .pgdata:/var/lib/postgresql/data
+      - /home/sergey/Документы/SQL/db_pg:/var/lib/postgresql/data
     env_file:
       - .env
