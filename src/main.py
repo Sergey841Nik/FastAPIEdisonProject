@@ -1,4 +1,4 @@
-from logging import getLogger, basicConfig, INFO, StreamHandler
+from logging import Logger, getLogger, basicConfig, INFO, StreamHandler
 
 import uvicorn
 
@@ -13,7 +13,7 @@ from src.exceptions import (
 
 app = FastAPI()
 
-logger = getLogger()
+logger: Logger = getLogger()
 
 FORMAT = "%(asctime)s:%(levelname)s:%(name)s:%(message)s"
 
@@ -24,7 +24,10 @@ basicConfig(level=INFO, format=FORMAT, handlers=[stream_handler])
 app.include_router(auth_router)
 
 app.add_exception_handler(HTTPException, custom_http_exception_handler)
-app.add_exception_handler(RequestValidationError, custom_request_validation_exception_handler)
+app.add_exception_handler(
+    RequestValidationError, custom_request_validation_exception_handler
+)
+
 
 @app.get("/")
 def home_page() -> dict:
@@ -37,4 +40,3 @@ if __name__ == "__main__":
         reload=True,
         port=8000,
     )
-

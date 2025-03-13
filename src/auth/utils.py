@@ -1,12 +1,12 @@
 from datetime import datetime, timezone, timedelta
-from logging import getLogger
+from logging import Logger, getLogger
 
 import bcrypt
 import jwt
 
 from src.core.config import settings
 
-logger = getLogger(__name__)
+logger: Logger = getLogger(__name__)
 
 
 def encode_jwt(
