@@ -7,6 +7,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from sqlalchemy.sql.elements import TextClause
 
+from src.exceptions import valid_integer, valid_string
+
 logger: Logger = getLogger(__name__)
 
 T = TypeVar("T", bound=Table)
@@ -19,6 +21,7 @@ class BaseDao:
         self._session: AsyncSession = session
 
     async def find_one_or_none_by_id(self, data: int) -> Row[Any] | None:
+        valid_integer(data)
         try:
             query: TextClause = text(f"SELECT * FROM {self.model.name} WHERE id = :id")
             query = query.bindparams(id=data)
@@ -35,6 +38,7 @@ class BaseDao:
             logger.error("Ошибка %s при поиске записи с %s", e, data)
 
     async def find_one_or_none(self, data: str) -> Row[Any] | None:
+        valid_string(data)
         try:
             query: TextClause = text(
                 f"SELECT * FROM {self.model.name} WHERE email = :data"
