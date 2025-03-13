@@ -7,7 +7,7 @@ from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from jwt import InvalidTokenError
 
-from src.auth.shemas import UserInfo, UserBase, UserInfoForAdmin
+from src.auth.schemas import UserInfo, UserBase, UserInfoForAdmin, UserUpdateInfo
 from src.auth import utils
 from src.auth.dao import AuthDao
 
@@ -63,8 +63,10 @@ def validate_type_token(payload: dict, token_type: str) -> bool:
 
 
 def get_current_token_payload(token: str = Depends(oauth2_scheme)) -> dict:
+    logger.info("Получаем payload из токена %s", token)
     try:
         payload: dict = utils.decode_jwt(token=token)
+        logger.info("Расшифрованные данные %s", payload)
     except InvalidTokenError as e:
         logger.info("Ошибка %s", e)
         raise HTTPException(
@@ -92,6 +94,15 @@ async def get_current_auth_user(
     validate_type_token(payload, "access")
     user: UserBase = await get_user_by_token_sub(session=session, payload=payload)
     return user
+
+async def update_user(
+    session: AsyncSession,
+    user: UserUpdateInfo,
+) -> None:
+    
+    dao = AuthDao(session)
+    logger.info("Обновляемые данные: %s", user)
+    await dao.update(model=user)
 
 
 async def get_current_admin_user(

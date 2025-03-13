@@ -11,6 +11,7 @@ class Settings(BaseSettings):
     DB_USER: str
     DB_PASS: str
     DB_NAME: str
+    MODE: str
 
     @property
     def url(self):

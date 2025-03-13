@@ -1,3 +1,4 @@
+from typing import Optional
 from logging import Logger, getLogger
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -12,8 +13,19 @@ from src.auth.dependencies import (
     get_current_token_payload,
     get_current_admin_user,
     get_all_users_for_admin,
+    update_user,
+    delete_user,
 )
-from src.auth.shemas import TokenInfo, UserBase, UserInfoForAdmin, UserRegister, UserAddDB, UserInfo
+from src.auth.schemas import (
+    TokenInfo,
+    UserBase,
+    UserInfoForAdmin,
+    UserRegister,
+    UserAddDB,
+    UserInfo,
+    UserUpdate,
+    UserUpdateInfo,
+)
 from src.auth.dao import AuthDao
 from src.core.db_helper import db_helper
 
@@ -40,7 +52,7 @@ async def register_users(
 
     res = await dao.add(UserAddDB(**user_dict))
     logger.info("Запись %s ", res)
-    return {"message": f"Вы успешно зарегистрированы!"}
+    return {"message": "Вы успешно зарегистрированы!"}
 
 
 @router.post("/login/", response_model=TokenInfo)
@@ -49,11 +61,13 @@ async def auth_user_issue_jwt(
     username: str = Form(...),
     password: str = Form(...),
     # user_data: OAuth2PasswordRequestForm = Depends(),
-    session = Depends(db_helper.get_session_without_commit),
+    session=Depends(db_helper.get_session_without_commit),
 ) -> TokenInfo:
-    
-    user: UserInfo = await validate_auth_user(session=session, email=username, password=password)
-    
+
+    user: UserInfo = await validate_auth_user(
+        session=session, email=username, password=password
+    )
+
     access_token = create_access_token(user)
     refresh_token = create_refresh_token(user)
     response.set_cookie(
@@ -69,38 +83,50 @@ async def auth_user_issue_jwt(
     )
 
 @router.post(
-        "/refresh/", 
-        response_model=TokenInfo,
-        response_model_exclude_none=True, #если в есть значения none то исключаем эти поля (тут refresh_token будет none)
-        )
+    "/refresh/",
+    response_model=TokenInfo,
+    response_model_exclude_none=True,  # если в есть значения none то исключаем эти поля (тут refresh_token будет none)
+)
 async def auth_refresh_jwt(
     request: Request,
-    session = Depends(db_helper.get_session_without_commit),
+    session: AsyncSession = Depends(db_helper.get_session_without_commit),
 ) -> TokenInfo:
     token: str | None = request.cookies.get("refresh_token")
     payload: dict = get_current_token_payload(token=token)
-    user: UserBase = await get_current_auth_user_for_refresh(session=session, payload=payload)
-    uesr_update: UserInfo = user.model_copy(update={"id": payload["sub"]})
-
-    access_token: str = create_access_token(uesr_update)
+    user: UserBase = await get_current_auth_user_for_refresh(
+        session=session, payload=payload
+    )
+    user_update = UserInfo(**user.model_dump(), id=payload["sub"])
+    print(f"{user_update=}")
+    access_token: str = create_access_token(user_update)
     return TokenInfo(
-        access_token=access_token,)
+        access_token=access_token,
+    ) 
 
-@router.get("/user/me/")
+
+@router.get("/user/me/", response_model=UserBase)
 async def get_user_info(
-    session = Depends(db_helper.get_session_without_commit),
-    payload = Depends(get_current_token_payload)
+    session: AsyncSession = Depends(db_helper.get_session_without_commit),
+    payload: dict = Depends(get_current_token_payload),
 ) -> UserBase:
     user: UserBase = await get_current_auth_user(session=session, payload=payload)
-    
+
     return user
 
-@router.get("/all_users_for_admin/")
+@router.put("/user/me/update_user/")
+async def update_user_info(
+    email_name: UserUpdate,
+    session: AsyncSession = Depends(db_helper.get_session_with_commit),
+    payload: dict = Depends(get_current_token_payload),
+) -> dict:
+    uses = UserUpdateInfo(**email_name.model_dump(), user_id=int(payload.get("sub")))
+    await update_user(session=session, user=uses)
+    return {"message": "Данные успешно обновлены"}
+
+@router.get("/all_users_for_admin/", response_model=list[UserInfoForAdmin])
 async def get_all_users(
-    session = Depends(db_helper.get_session_without_commit),
-    payload = Depends(get_current_token_payload)
+    session: AsyncSession = Depends(db_helper.get_session_without_commit),
+    payload: dict = Depends(get_current_token_payload),
 ) -> list[UserInfoForAdmin]:
     if await get_current_admin_user(session=session, payload=payload):
         return await get_all_users_for_admin(session=session)
-
-

@@ -6,7 +6,6 @@ from sqlalchemy import (
     String,
     LargeBinary,
     ForeignKey,
-    text,
 )
 
 metadata = MetaData()

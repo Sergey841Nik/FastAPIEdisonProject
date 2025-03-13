@@ -49,3 +49,10 @@ class UserInfo(UserBase):
 
 class UserInfoForAdmin(UserInfo):
     roles_name: str = Field(description="Название роли пользователя")
+
+class UserUpdate(BaseModel):
+    new_email: EmailStr | None = None
+    new_name: str | None = None
+
+class UserUpdateInfo(UserUpdate):
+    user_id: int = Field(description="Идентификатор пользователя")
