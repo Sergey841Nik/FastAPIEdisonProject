@@ -6,6 +6,7 @@ from fastapi import FastAPI
 from fastapi.exceptions import RequestValidationError, HTTPException
 
 from src.auth.views import router as auth_router
+from src.api_predictions.views import router as predictions_router
 from src.exceptions import (
     custom_http_exception_handler,
     custom_request_validation_exception_handler,
@@ -22,6 +23,7 @@ stream_handler.setLevel(INFO)
 basicConfig(level=INFO, format=FORMAT, handlers=[stream_handler])
 
 app.include_router(auth_router)
+app.include_router(predictions_router)
 
 app.add_exception_handler(HTTPException, custom_http_exception_handler)
 app.add_exception_handler(
