@@ -14,7 +14,6 @@ from src.auth.dependencies import (
     get_current_admin_user,
     get_all_users_for_admin,
     update_user,
-    delete_user,
 )
 from src.auth.schemas import (
     TokenInfo,
