@@ -1,7 +1,14 @@
-from pydantic import BaseModel, Field, ConfigDict
+from pydantic import BaseModel
+from typing import List
+
+
+class Detection(BaseModel):
+    class_name: str
+    confidence: float
+    box: List[int]  # [x1, y1, x2, y2]
 
 
 class PredictionResponse(BaseModel):
     """Модель ответа для предсказания изображения"""
-    class_name: str = Field(description="Класс изображения (кошка или собака)")
-    confidence: float = Field(description="Уверенность в предсказании в процентах", ge=0, le=100)
+    detections: List[Detection]
+    processed_image: bytes  # base64 encoded image
