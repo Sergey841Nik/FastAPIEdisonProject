@@ -1,104 +1,125 @@
 # FastAPI Edison Project
 
-Веб-приложение на FastAPI с аутентификацией и возможностями предсказания.
+Проект на FastAPI для распознавания объектов на изображениях с использованием нейронной сети MobileNet-SSD.
 
 ## Технологический стек
 
-- Python 3.12
-- FastAPI (веб-фреймворк)
-- SQLAlchemy (ORM для работы с базой данных)
-- Alembic (миграции базы данных)
-- Pydantic (валидация данных)
-- JWT Authentication (аутентификация)
-- OpenCV (обработка изображений)
-- Poetry (управление зависимостями)
-- Docker (контейнеризация)
+### Backend
+- Python 3.11+
+- FastAPI
+- SQLAlchemy
+- OpenCV
+- MobileNet-SSD
+- JWT аутентификация
+- PostgreSQL
+
+### Frontend
+- HTML5
+- CSS3
+- JavaScript (Vanilla)
+- FormData для загрузки файлов
+- Base64 для отображения обработанных изображений
 
 ## Структура проекта
 
 ```
-.
-├── alembic/           # Миграции базы данных
-├── src/              # Исходный код
-│   ├── api_predictions/  # API эндпоинты для предсказаний
-│   ├── auth/           # Модуль аутентификации
-│   ├── core/          # Основной функционал
-│   └── main.py        # Точка входа приложения
-├── tests/            # Тесты
-├── .env              # Переменные окружения
-├── .env_test         # Переменные окружения для тестов
-├── compose.yml       # Конфигурация Docker Compose
-├── pyproject.toml    # Зависимости Poetry
-└── pytest.ini       # Конфигурация Pytest
+FastAPI_Edison/
+├── src/
+│   ├── api_predictions/     # Модуль для работы с предсказаниями
+│   ├── auth/               # Модуль аутентификации
+│   ├── core/               # Основные настройки и утилиты
+│   └── main.py            # Точка входа приложения
+├── static/                 # Статические файлы
+│   ├── css/               # Стили
+│   └── js/                # JavaScript файлы
+├── templates/             # HTML шаблоны
+├── cert/                  # Сертификаты для JWT
+├── requirements.txt       # Зависимости проекта
+└── README.md             # Документация
 ```
 
-## Установка
+## Установка и настройка
 
-1. Установите Poetry:
+1. Клонируйте репозиторий:
 ```bash
-curl -sSL https://install.python-poetry.org | python3 -
+git clone <repository-url>
+cd FastAPI_Edison
 ```
 
-2. Установите зависимости:
+2. Создайте виртуальное окружение и активируйте его:
 ```bash
-poetry install
+python -m venv venv
+source venv/bin/activate  # для Linux/Mac
+# или
+venv\Scripts\activate  # для Windows
 ```
 
-3. Настройте переменные окружения:
+3. Установите зависимости:
 ```bash
-cp .env
-# Отредактируйте .env под вашу конфигурацию
+pip install -r requirements.txt
 ```
 
-4. Создайте ключи для JWT аутентификации:
-```bash
-# Создание директории в корне проекта и переход в директорию
-mkdir -p cert
-cd /cert
-
-# Создание приватного ключа
-openssl genrsa -out private.pem 2048
-
-# Создание публичного ключа на основе приватного
-openssl rsa -in private.pem -pubout -out public.pem
+4. Создайте файл `.env` в корневой директории проекта:
+```env
+DATABASE_URL=postgresql+asyncpg://user:password@localhost:5432/dbname
+SECRET_KEY=your-secret-key
+ALGORITHM=RS256
+ACCESS_TOKEN_EXPIRE_MINUTES=30
+REFRESH_TOKEN_EXPIRE_DAYS=7
 ```
 
-5. Запустите миграции базы данных:
+5. Создайте базу данных PostgreSQL и примените миграции:
 ```bash
 alembic upgrade head
 ```
 
-## Запуск приложения
+6. Сгенерируйте ключи для JWT:
+```bash
+# Создание приватного ключа
+openssl genrsa -out cert/private.pem 2048
 
-Разработка:
+# Создание публичного ключа
+openssl rsa -in cert/private.pem -pubout -out cert/public.pem
+```
+
+## Запуск проекта
+
+1. Запустите сервер разработки:
 ```bash
 uvicorn src.main:app --reload
 ```
 
-Продакшн:
-```bash
-docker compose up -d
+2. Откройте браузер и перейдите по адресу:
 ```
+http://localhost:8000
+```
+
+## Функциональность
+
+### Backend
+- Аутентификация пользователей (JWT)
+- Загрузка и обработка изображений
+- Распознавание объектов с помощью MobileNet-SSD
+- API для получения предсказаний
+- Логирование операций
+
+### Frontend
+- Современный адаптивный дизайн
+- Форма авторизации
+- Загрузка изображений через drag-and-drop
+- Отображение обработанных изображений с рамками и подписями
+- Вывод информации о найденных объектах
+- Управление состоянием авторизации
+
+## API Документация
+
+После запуска сервера документация доступна по адресам:
+- Swagger UI: `http://localhost:8000/docs`
+- ReDoc: `http://localhost:8000/redoc`
 
 ## Тестирование
 
-Запуск тестов:
+Для запуска тестов выполните:
 ```bash
 pytest
 ```
-
-## Документация API
-
-После запуска приложения доступны:
-- Swagger UI: http://localhost:8000/docs
-- ReDoc: http://localhost:8000/redoc
-
-## Возможности
-
-- Аутентификация через JWT
-- Управление пользователями
-- API эндпоинты для предсказаний
-- Миграции базы данных через Alembic
-- Полный набор тестов
-- Поддержка Docker
-- Система логирования

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FastAPI Edison Project</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>FastAPI Edison Project</h1>
+            <nav>
+                <ul>
+                    <li><a href="#" id="loginBtn">Вход</a></li>
+                    <li><a href="#" id="registerBtn">Регистрация</a></li>
+                    <li><a href="#" id="predictBtn">Предсказания</a></li>
+                </ul>
+            </nav>
+        </header>
+
+        <main>
+            <section id="auth-section" class="hidden">
+                <div class="auth-form">
+                    <h2>Авторизация</h2>
+                    <form id="loginForm">
+                        <input type="text" name="username" placeholder="Email" required>
+                        <input type="password" name="password" placeholder="Пароль" required>
+                        <button type="submit">Войти</button>
+                    </form>
+                </div>
+            </section>
+
+            <section id="predict-section" class="hidden">
+                <h2>Предсказания</h2>
+                <div class="upload-area">
+                    <input type="file" id="imageInput" accept="image/*">
+                    <button id="uploadBtn">Загрузить изображение</button>
+                </div>
+                <div id="result" class="hidden">
+                    <h3>Результат предсказания:</h3>
+                    <img id="processedImage" class="processed-image" alt="Обработанное изображение">
+                    <p id="predictionResult"></p>
+                </div>
+            </section>
+        </main>
+    </div>
+    <script src="/static/js/main.js"></script>
+</body>
+</html> 
