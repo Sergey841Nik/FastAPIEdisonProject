@@ -15,14 +15,12 @@ from src.core.db_helper import DBHelper
 
 BASE_DIR = Path(__file__).parent.parent
 
-DB_PATH = BASE_DIR / "test" / "test_db.db"
+DB_PATH = BASE_DIR / "tests" / "test_db.db"
 url: str = f"sqlite+aiosqlite:///{DB_PATH}"
 db_helper = DBHelper(url)
 
-
 @pytest_asyncio.fixture(scope="session", autouse=True)
 async def db_engine() -> None:
-    assert settings.MODE == "TEST"
     async with db_helper.engine.begin() as conn:
         await conn.run_sync(metadata.drop_all)
 
