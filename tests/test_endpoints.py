@@ -1,7 +1,6 @@
 import pytest
 import pytest_asyncio
 from pathlib import Path
-from fastapi.testclient import TestClient
 from httpx import AsyncClient, ASGITransport
 from sqlalchemy.ext.asyncio import AsyncSession
 
