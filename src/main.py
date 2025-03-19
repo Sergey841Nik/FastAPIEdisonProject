@@ -1,6 +1,7 @@
 from logging import Logger, getLogger, basicConfig, INFO, StreamHandler, FileHandler
 from pathlib import Path
 
+from starlette.templating import _TemplateResponse
 import uvicorn
 
 from fastapi import FastAPI
@@ -61,7 +62,7 @@ app.add_exception_handler(
 
 
 @app.get("/", response_class=HTMLResponse)
-async def home_page(request: Request):
+async def home_page(request: Request) -> _TemplateResponse:
     """
     Корневой эндпоинт приложения
     Возвращает HTML страницу

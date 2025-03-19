@@ -15,6 +15,9 @@
                     <li><a href="#" id="loginBtn">Вход</a></li>
                     <li><a href="#" id="registerBtn">Регистрация</a></li>
                     <li><a href="#" id="predictBtn">Предсказания</a></li>
+                    <li><a href="#" id="profileBtn" class="hidden">Профиль</a></li>
+                    <li><a href="#" id="adminBtn" class="hidden">Админ панель</a></li>
+                    <li><a href="#" id="logoutBtn" class="hidden">Выйти</a></li>
                 </ul>
             </nav>
         </header>
@@ -31,6 +34,35 @@
                 </div>
             </section>
 
+            <section id="register-section" class="hidden">
+                <div class="auth-form">
+                    <h2>Регистрация</h2>
+                    <form id="registerForm">
+                        <input type="text" name="name" placeholder="Имя" required>
+                        <input type="email" name="email" placeholder="Email" required>
+                        <input type="password" name="password" placeholder="Пароль" required>
+                        <input type="password" name="confirm_password" placeholder="Подтвердите пароль" required>
+                        <button type="submit">Зарегистрироваться</button>
+                    </form>
+                </div>
+            </section>
+
+            <section id="profile-section" class="hidden">
+                <div class="profile-form">
+                    <h2>Профиль пользователя</h2>
+                    <div id="profileInfo">
+                        <p>Email: <span id="profileEmail"></span></p>
+                        <p>Имя: <span id="profileName"></span></p>
+                    </div>
+                    <form id="updateProfileForm">
+                        <h3>Обновить профиль</h3>
+                        <input type="email" name="new_email" placeholder="Новый email">
+                        <input type="text" name="new_name" placeholder="Новое имя">
+                        <button type="submit">Обновить</button>
+                    </form>
+                </div>
+            </section>
+
             <section id="predict-section" class="hidden">
                 <h2>Предсказания</h2>
                 <div class="upload-area">
@@ -41,6 +73,29 @@
                     <h3>Результат предсказания:</h3>
                     <img id="processedImage" class="processed-image" alt="Обработанное изображение">
                     <p id="predictionResult"></p>
+                </div>
+            </section>
+
+            <section id="admin-section" class="hidden">
+                <div class="admin-panel">
+                    <h2>Админ панель</h2>
+                    <div class="admin-users">
+                        <h3>Пользователи</h3>
+                        <div class="users-table-container">
+                            <table class="users-table">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Имя</th>
+                                        <th>Email</th>
+                                        <th>Статус</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="usersTableBody">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </section>
         </main>
