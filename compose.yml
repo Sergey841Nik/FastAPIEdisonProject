@@ -10,6 +10,14 @@ services:
       - POSTGRES_PASSWORD=${DB_PASS}
       - POSTGRES_USER=${DB_USER}
     volumes:
-      - /home/sergey/Документы/SQL/db_pg:/var/lib/postgresql/data
+      - ./db_pg:/var/lib/postgresql/data
     env_file:
       - .env
+
+  app:
+    container_name: python
+    build: .
+    ports:
+      - 8000:8000
+    depends_on:
+      - pgdb
