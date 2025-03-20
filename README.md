@@ -1,6 +1,6 @@
 # FastAPI Edison Project
 
-Проект на FastAPI для распознавания объектов на изображениях с использованием нейронной сети MobileNet-SSD.
+Проект на FastAPI для распознавания объектов на изображениях с использованием нейронной сети.
 
 ## Технологический стек
 
@@ -9,7 +9,6 @@
 - FastAPI
 - SQLAlchemy
 - OpenCV
-- MobileNet-SSD
 - JWT аутентификация
 - PostgreSQL
 
@@ -42,21 +41,13 @@ FastAPI_Edison/
 
 1. Клонируйте репозиторий:
 ```bash
-git clone <repository-url>
+git clone https://github.com/Sergey841Nik/FastAPIEdisonProject.git
 cd FastAPI_Edison
 ```
 
-2. Создайте виртуальное окружение и активируйте его:
+2. Установите зависимости:
 ```bash
-python -m venv venv
-source venv/bin/activate  # для Linux/Mac
-# или
-venv\Scripts\activate  # для Windows
-```
-
-3. Установите зависимости:
-```bash
-pip install -r requirements.txt
+poetry install 
 ```
 
 4. Создайте файл `.env` в корневой директории проекта:
@@ -84,9 +75,9 @@ openssl rsa -in cert/private.pem -pubout -out cert/public.pem
 
 ## Запуск проекта
 
-1. Запустите сервер разработки:
+1. Запустите сервер разработки с помощью Docker Compose:
 ```bash
-uvicorn src.main:app --reload
+docker-compose up --build
 ```
 
 2. Откройте браузер и перейдите по адресу:
@@ -106,6 +97,14 @@ http://localhost:8000
 ### Frontend
 - Современный адаптивный дизайн
 - Форма авторизации
+- Загрузка изображений через drag-and-drop
+- Отображение обработанных изображений с рамками и подписями
+- Вывод информации о найденных объектах
+- Управление состоянием авторизации
+
+## API Документация
+
+После запуска сервера документация доступна по адресам:
 - Загрузка изображений через drag-and-drop
 - Отображение обработанных изображений с рамками и подписями
 - Вывод информации о найденных объектах
