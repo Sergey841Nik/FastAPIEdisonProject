@@ -77,7 +77,7 @@ openssl rsa -in cert/private.pem -pubout -out cert/public.pem
 
 1. Запустите сервер разработки с помощью Docker Compose:
 ```bash
-docker-compose up --build
+docker-compose up -d
 ```
 
 2. Откройте браузер и перейдите по адресу:
