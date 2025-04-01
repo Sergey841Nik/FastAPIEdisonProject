@@ -52,11 +52,13 @@ poetry install
 
 4. Создайте файл `.env` в корневой директории проекта:
 ```env
-DATABASE_URL=postgresql+asyncpg://user:password@localhost:5432/dbname
-SECRET_KEY=your-secret-key
-ALGORITHM=RS256
-ACCESS_TOKEN_EXPIRE_MINUTES=30
-REFRESH_TOKEN_EXPIRE_DAYS=7
+DB_HOST=pgdb
+DB_PORT=5432
+DB_USER=user_name
+DB_PASS=super_password
+DB_NAME=db_name
+
+MODE=DEV
 ```
 
 5. Создайте базу данных PostgreSQL и примените миграции:
